@@ -1,0 +1,61 @@
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+#include <stdio.h>
+#include <string.h>
+
+int temp = 0.0;
+int hmd = 0.0;
+int relay = D8;
+
+int adc1 = 0;
+void setup() {
+    // put your setup code here, to run once:
+    Serial.begin(9600);
+  
+    lcd.init();
+    lcd.backlight();
+    lcd.setCursor(0, 0);
+    lcd.print("Welcome To");
+    lcd.setCursor(0, 1);
+    lcd.print("The project");
+    delay(2000);
+    pinMode(relay,OUTPUT);
+    
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Initialising...");
+    
+    digitalWrite(relay ,0);
+    adc1 = analogRead(A0);
+    delay(1000);
+}
+
+void loop() 
+{       
+    int adc = analogRead(A0);
+        
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Monitoring");
+
+    if(adc > (adc1+10))
+    {
+      digitalWrite(relay ,1);
+      
+      while(1)
+      {
+        lcd.setCursor(0, 1);
+        lcd.print("Status:Load Sharing");
+        delay(3000);
+      }
+    }
+    else
+    {
+      
+      lcd.setCursor(0, 1);
+      lcd.print("Status: NORMAL");
+    }
+    delay(300);
+         
+}
